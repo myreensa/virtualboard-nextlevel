@@ -45,21 +45,28 @@ wss.on('connection', (ws, req) => {
     try {
       msgObj = JSON.parse(message)
     } catch {
-      msgObj = {text: message.toString}
+      msgObj = { text: message.toString() }
     }
-
     const payload = JSON.stringify({
       status: 0,
       type: 'paste:update',
-      text: msgObj.text || ''
+      text: msgObj.text || '',
+      from: ws.user?.sub || null,         
+      freemem: Math.round(os.freemem() / 1024 / 1024),
+      totalmem: Math.round(os.totalmem() / 1024 / 1024),
+      ts: Date.now()
     })
+
+    for (const client of wss.clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(payload)
+      }
+    }
   })
 
-  for (const client of wss.clients) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(payload)
-    }
-  }
+  ws.on('close', (code, reason) => {
+    console.log('Client disconnected', code, reason?.toString())
+  })
 })
 
 server.listen(PORT, () => {
