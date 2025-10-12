@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 const jwt = require('jsonwebtoken')
 const os = require('os')
+const http = require('http')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 5000
