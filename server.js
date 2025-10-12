@@ -51,7 +51,7 @@ wss.on('connection', (ws, req) => {
       status: 0,
       type: 'paste',
       text: msgObj.text || '',
-      from: ws.user?.sub || null,         
+      from: ws.user?.id || null,         
       freemem: Math.round(os.freemem() / 1024 / 1024),
       totalmem: Math.round(os.totalmem() / 1024 / 1024),
       ts: Date.now()
