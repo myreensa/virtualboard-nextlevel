@@ -58,7 +58,7 @@ wss.on('connection', (ws, req) => {
     })
 
     for (const client of wss.clients) {
-      if (client.readyState === WebSocket.OPEN) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(payload)
       }
     }
