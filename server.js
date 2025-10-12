@@ -4,13 +4,19 @@ const os = require('os')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 5000
-const wss = new WebSocket.Server({ port: PORT })
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200)
+  res.end("Websocket server running")
+})
+
+const wss = new WebSocket.Server({ server })
 
 wss.on('connection', (ws, req) => {
   console.log('Client connected')
 
 
-  const urlParams = new URLSearchParams(req.url.slice(1))
+  const urlParams = new URLSearchParams(req.url.replace(/^\/\?/, ''))
   const token = urlParams.get('token')
 
   if (!token) {
@@ -37,7 +43,7 @@ wss.on('connection', (ws, req) => {
 
     const payload = JSON.stringify({
       status: 0,
-      type: 'paste',
+      type: 'paste:update',
       text,
       from: ws.user?.sub || null,         
       freemem: Math.round(os.freemem() / 1024 / 1024),
@@ -57,4 +63,6 @@ wss.on('connection', (ws, req) => {
   })
 })
 
-console.log(`WS server listening on :${PORT}`)
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`)
+})
