@@ -49,7 +49,7 @@ wss.on('connection', (ws, req) => {
     }
     const payload = JSON.stringify({
       status: 0,
-      type: 'paste:update',
+      type: 'paste',
       text: msgObj.text || '',
       from: ws.user?.sub || null,         
       freemem: Math.round(os.freemem() / 1024 / 1024),
